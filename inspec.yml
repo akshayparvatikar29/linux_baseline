@@ -1,0 +1,5 @@
+name: linux_baseline
+title: Linux Security Baseline
+version: 1.0.0
+supports:
+  - os-family: linux
