@@ -1,7 +1,6 @@
 control 'ssh-root-login-disabled' do
   impact 1.0
   title 'Disable SSH root login'
-  desc 'Root login over SSH must be disabled'
 
   describe sshd_config do
     its('PermitRootLogin') { should cmp 'no' }
@@ -26,12 +25,16 @@ control 'nginx-installed' do
   end
 end
 
-control 'firewalld-enabled' do
+control 'automatic-security-updates-enabled' do
   impact 0.7
-  title 'Firewall must be enabled'
+  title 'Automatic security updates must be enabled'
 
-  describe service('firewalld') do
-    it { should be_enabled }
-    it { should be_running }
+  describe package('unattended-upgrades') do
+    it { should be_installed }
+  end
+
+  describe file('/etc/apt/apt.conf.d/20auto-upgrades') do
+    it { should exist }
+    its('content') { should match(/APT::Periodic::Unattended-Upgrade\s+"1";/) }
   end
 end
